@@ -3,23 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PUENTE - Asistente inclusivo</title>
+  <title>PUENTE - Tu asistente de ayuda</title>
   <style>
     :root {
       --azul: #1f4e79;
       --azul-oscuro: #173b5c;
+      --azul-claro: #eaf3ff;
       --fondo: #f5f5f5;
+      --blanco: #ffffff;
+      --gris-fondo: #eef1f5;
+      --gris-texto: #425266;
+      --verde: #32b76d;
+      --sombra: 0 18px 40px rgba(18, 39, 63, 0.18);
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
-    body {
+    html, body {
       margin: 0;
+      padding: 0;
       font-family: Arial, sans-serif;
       background: var(--fondo);
-      color: #222;
+      color: #1f2a37;
     }
 
     .contenedor {
@@ -29,14 +34,22 @@
     }
 
     header {
-      padding: 16px;
-      background: var(--azul);
+      padding: 18px 16px;
+      background: linear-gradient(135deg, var(--azul), #2a5e8c);
       color: white;
+      box-shadow: 0 6px 16px rgba(31, 78, 121, 0.18);
     }
 
     header h1 {
       margin: 0;
-      font-size: clamp(1.35rem, 3vw, 2rem);
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      font-weight: 700;
+    }
+
+    .subtitulo {
+      margin-top: 6px;
+      font-size: 1rem;
+      opacity: 0.95;
     }
 
     .selector-regional {
@@ -45,33 +58,48 @@
       gap: 16px;
       padding: 20px;
       background: white;
+      border-bottom: 1px solid #e3e8ef;
     }
 
     .selector-regional label {
       display: block;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
+      color: var(--gris-texto);
+      font-weight: 700;
+      font-size: 0.95rem;
     }
 
     .selector-regional select {
       min-width: 220px;
-      padding: 10px;
-      border: 1px solid #aaa;
-      border-radius: 4px;
+      padding: 11px 12px;
+      border: 1px solid #c9d3df;
+      border-radius: 10px;
       background: white;
       font-size: 1rem;
+      color: #23303d;
+      outline: none;
     }
 
     .contenido {
-      min-height: 65vh;
-      padding: 32px 20px 120px;
+      min-height: 60vh;
+      padding: 28px 20px 120px;
       background: white;
     }
 
     .contenido h2 {
+      margin-top: 0;
+      margin-bottom: 12px;
       color: var(--azul);
+      font-size: clamp(1.4rem, 2vw, 2rem);
     }
 
-    /* Botón flotante del asistente */
+    .contenido p {
+      max-width: 710px;
+      line-height: 1.6;
+      color: var(--gris-texto);
+      font-size: 1.02rem;
+    }
+
     .boton-asistente {
       position: fixed;
       right: 24px;
@@ -79,61 +107,100 @@
       z-index: 1001;
       display: flex;
       align-items: center;
-      gap: 9px;
-      padding: 14px 20px;
-      border: 0;
+      gap: 10px;
+      padding: 14px 18px;
+      border: none;
       border-radius: 999px;
-      background: var(--azul);
-      color: white;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, .3);
+      background: linear-gradient(135deg, var(--azul), #2f73b6);
+      color: #fff;
       cursor: pointer;
-      font-size: 1rem;
-      font-weight: bold;
+      box-shadow: 0 14px 28px rgba(31, 78, 121, 0.35);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      font-size: 0.98rem;
+      font-weight: 700;
     }
 
     .boton-asistente:hover,
     .boton-asistente:focus-visible {
-      background: var(--azul-oscuro);
+      transform: translateY(-1px);
+      box-shadow: 0 18px 32px rgba(31, 78, 121, 0.42);
     }
 
-    /* Ventana del asistente anclada a la parte inferior */
+    .icono-burbuja {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.18);
+      font-size: 1.1rem;
+    }
+
     .ventana-asistente {
       position: fixed;
       right: 24px;
-      bottom: 88px;
+      bottom: 92px;
       z-index: 1000;
       display: none;
-      width: min(440px, calc(100vw - 32px));
-      height: min(700px, calc(100vh - 120px));
-      overflow: hidden;
-      border: 1px solid #c7c7c7;
-      border-radius: 12px;
+      width: min(430px, calc(100vw - 24px));
+      height: min(720px, calc(100vh - 110px));
       background: white;
-      box-shadow: 0 8px 30px rgba(0, 0, 0, .28);
+      border: 1px solid rgba(153, 166, 180, 0.45);
+      border-radius: 22px 22px 18px 18px;
+      overflow: hidden;
+      box-shadow: var(--sombra);
     }
 
     .ventana-asistente.abierta {
       display: flex;
       flex-direction: column;
+      animation: aparecer 0.22s ease;
+    }
+
+    @keyframes aparecer {
+      from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
     }
 
     .cabecera-asistente {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      min-height: 52px;
-      padding: 10px 14px;
-      background: var(--azul);
+      padding: 12px 16px;
+      background: linear-gradient(135deg, var(--azul), #2e6fa4);
       color: white;
+      border-bottom: 1px solid rgba(255,255,255,0.18);
     }
 
-    .cabecera-asistente strong {
-      font-size: 1rem;
+    .titulo-chat {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    .titulo-chat .punto {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--verde);
+      box-shadow: 0 0 0 3px rgba(50, 183, 109, 0.2);
     }
 
     .cerrar-asistente {
+      width: 32px;
+      height: 32px;
       border: 0;
-      background: transparent;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.12);
       color: white;
       cursor: pointer;
       font-size: 1.5rem;
@@ -141,11 +208,11 @@
     }
 
     .asistente-iframe {
+      flex: 1;
       width: 100%;
       height: 100%;
-      min-height: 0;
       border: 0;
-      background: white;
+      background: #f8fbff;
     }
 
     .enlace-alternativo {
@@ -154,18 +221,25 @@
       background: white;
       color: #0645ad;
       text-align: center;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .enlace-alternativo:hover {
+      text-decoration: underline;
     }
 
     @media (max-width: 600px) {
       .boton-asistente {
         right: 16px;
         bottom: 16px;
+        padding: 12px 16px;
       }
 
       .ventana-asistente {
-        right: 16px;
+        right: 12px;
         bottom: 78px;
-        width: calc(100vw - 32px);
+        width: calc(100vw - 24px);
         height: calc(100vh - 110px);
       }
     }
@@ -174,7 +248,8 @@
 <body>
   <header>
     <div class="contenedor">
-      <h1>PUENTE - Asistente inclusivo</h1>
+      <h1>PUENTE</h1>
+      <div class="subtitulo">Tu asistente de ayuda</div>
     </div>
   </header>
 
@@ -207,8 +282,8 @@
     </div>
 
     <section class="contenido">
-      <h2>Bienvenido/a a PUENTE</h2>
-      <p>Selecciona tu comunidad y el idioma de atención. Después, pulsa el botón del asistente situado abajo a la derecha.</p>
+      <h2>Hola, soy PUENTE</h2>
+      <p>Estoy aquí para ayudarte con tus dudas, trámites y consultas de la forma más sencilla y cercana posible.</p>
     </section>
 
     <a
@@ -222,20 +297,24 @@
 
   <section id="ventanaAsistente" class="ventana-asistente" aria-label="Asistente PUENTE">
     <div class="cabecera-asistente">
-      <strong>Asistente PUENTE</strong>
+      <div class="titulo-chat">
+        <span class="punto" aria-hidden="true"></span>
+        <span>PUENTE</span>
+      </div>
       <button id="cerrarAsistente" class="cerrar-asistente" type="button" aria-label="Cerrar asistente">×</button>
     </div>
     <iframe
       class="asistente-iframe"
       src="https://sistema-inclusivo-fsxacs9cxlh7e6tzaf9ax5.streamlit.app"
-      title="Aplicación PUENTE - Asistente inclusivo"
+      title="PUENTE - Tu asistente de ayuda"
       allow="microphone"
       allowfullscreen>
     </iframe>
   </section>
 
   <button id="botonAsistente" class="boton-asistente" type="button" aria-expanded="false" aria-controls="ventanaAsistente">
-    💬 <span>Abrir asistente</span>
+    <span class="icono-burbuja">💬</span>
+    <span>Hablar con PUENTE</span>
   </button>
 
   <script>
@@ -246,7 +325,7 @@
     function alternarAsistente() {
       const abierto = ventanaAsistente.classList.toggle('abierta');
       botonAsistente.setAttribute('aria-expanded', abierto);
-      botonAsistente.querySelector('span').textContent = abierto ? 'Cerrar asistente' : 'Abrir asistente';
+      botonAsistente.querySelector('span:last-of-type').textContent = abierto ? 'Cerrar asistente' : 'Hablar con PUENTE';
     }
 
     botonAsistente.addEventListener('click', alternarAsistente);
