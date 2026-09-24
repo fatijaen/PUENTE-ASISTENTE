@@ -5,10 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PUENTE - Asistente inclusivo</title>
   <style>
+    :root {
+      --azul: #1f4e79;
+      --azul-oscuro: #173b5c;
+      --fondo: #f5f5f5;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #f5f5f5;
+      background: var(--fondo);
+      color: #222;
     }
 
     .contenedor {
@@ -19,32 +30,120 @@
 
     header {
       padding: 16px;
-      background: #1f4e79;
+      background: var(--azul);
       color: white;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: clamp(1.35rem, 3vw, 2rem);
     }
 
     .selector-regional {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
-      padding: 15px;
+      gap: 16px;
+      padding: 20px;
       background: white;
     }
 
     .selector-regional label {
       display: block;
-      margin-bottom: 5px;
+      margin-bottom: 6px;
     }
 
     .selector-regional select {
-      min-width: 190px;
-      padding: 8px;
+      min-width: 220px;
+      padding: 10px;
+      border: 1px solid #aaa;
+      border-radius: 4px;
+      background: white;
+      font-size: 1rem;
     }
 
-    iframe {
-      display: block;
+    .contenido {
+      min-height: 65vh;
+      padding: 32px 20px 120px;
+      background: white;
+    }
+
+    .contenido h2 {
+      color: var(--azul);
+    }
+
+    /* Botón flotante del asistente */
+    .boton-asistente {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      z-index: 1001;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 14px 20px;
+      border: 0;
+      border-radius: 999px;
+      background: var(--azul);
+      color: white;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, .3);
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: bold;
+    }
+
+    .boton-asistente:hover,
+    .boton-asistente:focus-visible {
+      background: var(--azul-oscuro);
+    }
+
+    /* Ventana del asistente anclada a la parte inferior */
+    .ventana-asistente {
+      position: fixed;
+      right: 24px;
+      bottom: 88px;
+      z-index: 1000;
+      display: none;
+      width: min(440px, calc(100vw - 32px));
+      height: min(700px, calc(100vh - 120px));
+      overflow: hidden;
+      border: 1px solid #c7c7c7;
+      border-radius: 12px;
+      background: white;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, .28);
+    }
+
+    .ventana-asistente.abierta {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .cabecera-asistente {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 52px;
+      padding: 10px 14px;
+      background: var(--azul);
+      color: white;
+    }
+
+    .cabecera-asistente strong {
+      font-size: 1rem;
+    }
+
+    .cerrar-asistente {
+      border: 0;
+      background: transparent;
+      color: white;
+      cursor: pointer;
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+
+    .asistente-iframe {
       width: 100%;
-      height: 900px;
+      height: 100%;
+      min-height: 0;
       border: 0;
       background: white;
     }
@@ -55,6 +154,20 @@
       background: white;
       color: #0645ad;
       text-align: center;
+    }
+
+    @media (max-width: 600px) {
+      .boton-asistente {
+        right: 16px;
+        bottom: 16px;
+      }
+
+      .ventana-asistente {
+        right: 16px;
+        bottom: 78px;
+        width: calc(100vw - 32px);
+        height: calc(100vh - 110px);
+      }
     }
   </style>
 </head>
@@ -93,20 +206,51 @@
       </div>
     </div>
 
-    <iframe
-      src="https://sistema-inclusivo-fsxacs9cxlh7e6tzaf9ax5.streamlit.app"
-      title="Aplicación PUENTE - Asistente inclusivo"
-      allow="microphone"
-      allowfullscreen>
-    </iframe>
+    <section class="contenido">
+      <h2>Bienvenido/a a PUENTE</h2>
+      <p>Selecciona tu comunidad y el idioma de atención. Después, pulsa el botón del asistente situado abajo a la derecha.</p>
+    </section>
 
     <a
       class="enlace-alternativo"
       href="https://sistema-inclusivo-fsxacs9cxlh7e6tzaf9ax5.streamlit.app"
       target="_blank"
       rel="noopener noreferrer">
-      Si la aplicación no aparece, abrir PUENTE en una nueva pestaña
+      Si el asistente no aparece, abrir PUENTE en una nueva pestaña
     </a>
   </main>
+
+  <section id="ventanaAsistente" class="ventana-asistente" aria-label="Asistente PUENTE">
+    <div class="cabecera-asistente">
+      <strong>Asistente PUENTE</strong>
+      <button id="cerrarAsistente" class="cerrar-asistente" type="button" aria-label="Cerrar asistente">×</button>
+    </div>
+    <iframe
+      class="asistente-iframe"
+      src="https://sistema-inclusivo-fsxacs9cxlh7e6tzaf9ax5.streamlit.app"
+      title="Aplicación PUENTE - Asistente inclusivo"
+      allow="microphone"
+      allowfullscreen>
+    </iframe>
+  </section>
+
+  <button id="botonAsistente" class="boton-asistente" type="button" aria-expanded="false" aria-controls="ventanaAsistente">
+    💬 <span>Abrir asistente</span>
+  </button>
+
+  <script>
+    const botonAsistente = document.getElementById('botonAsistente');
+    const ventanaAsistente = document.getElementById('ventanaAsistente');
+    const cerrarAsistente = document.getElementById('cerrarAsistente');
+
+    function alternarAsistente() {
+      const abierto = ventanaAsistente.classList.toggle('abierta');
+      botonAsistente.setAttribute('aria-expanded', abierto);
+      botonAsistente.querySelector('span').textContent = abierto ? 'Cerrar asistente' : 'Abrir asistente';
+    }
+
+    botonAsistente.addEventListener('click', alternarAsistente);
+    cerrarAsistente.addEventListener('click', alternarAsistente);
+  </script>
 </body>
 </html>
