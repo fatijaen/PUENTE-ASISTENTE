@@ -1,32 +1,112 @@
-<!-- Selector de Adaptación Territorial e Idioma -->
-<div class="selector-regional" style="display: flex; gap: 10px; margin-bottom: 15px;">
-  <div>
-    <label for="ccaa"><strong>Comunidad Autónoma:</strong></label>
-    <select id="ccaa">
-      <option value="age">Ámbito Estatal (AGE)</option>
-      <option value="an">Andalucía</option>
-      <option value="ct">Cataluña</option>
-      <option value="ga">Galicia</option>
-      <option value="pv">País Vasco</option>
-      <option value="cv">Comunitat Valenciana</option>
-    </select>
-  </div>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PUENTE - Asistente inclusivo</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+    }
 
-  <div>
-    <label for="idioma"><strong>Idioma de atención:</strong></label>
-    <select id="idioma">
-      <option value="es">Castellano</option>
-      <option value="ca">Català / Valencià</option>
-      <option value="eu">Euskara</option>
-      <option value="gl">Galego</option>
-      <option value="en">English</option>
-      <option value="fr">Français</option>
-      <option value="ar">العربية (Árabe)</option>
-    </select>
-  </div>
-</div>
-<iframe
-  src="https://streamlit.app"
-  style="height: 600px; width: 100%; border: none;"
-  title="Asistente de Cita Médica Inclusiva">
-</iframe>
+    .contenedor {
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    header {
+      padding: 16px;
+      background: #1f4e79;
+      color: white;
+    }
+
+    .selector-regional {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 15px;
+      background: white;
+    }
+
+    .selector-regional label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .selector-regional select {
+      min-width: 190px;
+      padding: 8px;
+    }
+
+    iframe {
+      display: block;
+      width: 100%;
+      height: 900px;
+      border: 0;
+      background: white;
+    }
+
+    .enlace-alternativo {
+      display: block;
+      padding: 12px 16px;
+      background: white;
+      color: #0645ad;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="contenedor">
+      <h1>PUENTE - Asistente inclusivo</h1>
+    </div>
+  </header>
+
+  <main class="contenedor">
+    <div class="selector-regional">
+      <div>
+        <label for="ccaa"><strong>Comunidad Autónoma:</strong></label>
+        <select id="ccaa" name="ccaa">
+          <option value="age">Ámbito Estatal (AGE)</option>
+          <option value="an">Andalucía</option>
+          <option value="ct">Cataluña</option>
+          <option value="ga">Galicia</option>
+          <option value="pv">País Vasco</option>
+          <option value="cv">Comunitat Valenciana</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="idioma"><strong>Idioma de atención:</strong></label>
+        <select id="idioma" name="idioma">
+          <option value="es">Castellano</option>
+          <option value="ca">Català / Valencià</option>
+          <option value="eu">Euskara</option>
+          <option value="gl">Galego</option>
+          <option value="en">English</option>
+          <option value="fr">Français</option>
+          <option value="ar">العربية (Árabe)</option>
+        </select>
+      </div>
+    </div>
+
+    <iframe
+      src="https://sistema-inclusivo-fsxacs9cxlh7e6tzaf9ax5.streamlit.app"
+      title="Aplicación PUENTE - Asistente inclusivo"
+      allow="microphone"
+      allowfullscreen>
+    </iframe>
+
+    <a
+      class="enlace-alternativo"
+      href="https://sistema-inclusivo-fsxacs9cxlh7e6tzaf9ax5.streamlit.app"
+      target="_blank"
+      rel="noopener noreferrer">
+      Si la aplicación no aparece, abrir PUENTE en una nueva pestaña
+    </a>
+  </main>
+</body>
+</html>
